@@ -1,0 +1,38 @@
+name: LikeComment
+id: LikeComment
+key: likecomment
+version: 0.1
+schema_version: 0.3
+l10n_class: LikeComment::L10N
+author_name: Alfasado Inc.
+author_link: http://alfasado.net/
+description: <__trans phrase="User likes to comment.">
+object_types:
+    likecomment: LikeComment::LikeComment
+callbacks:
+    cms_save_permission_filter.likecomment: >-
+                sub { 
+                    return 1 if MT->instance->user->is_superuser;
+                    MT->instance->return_to_dashboard();
+                    return undef;
+                }
+    cms_delete_permission_filter.likecomment: >-
+                sub { 
+                    return 1 if MT->instance->user->is_superuser;
+                    MT->instance->return_to_dashboard();
+                    return undef;
+                }
+applications:
+    comments:
+        methods:
+            like:
+                code: LikeComment::CMS::_app_comments_like
+                requires_login: 1
+tags:
+    block:
+        IfAuthorLikeThisComment?: LikeComment::Tags::_hdlr_if_author_like
+        IfAuthorNotLikeThisComment?: LikeComment::Tags::_hdlr_if_author_not_like
+    function:
+        CommentLikeCount: LikeComment::Tags::_hdlr_comment_like_count
+        CommentNotLikeCount: LikeComment::Tags::_hdlr_comment_not_like_count
+        CommentLikeTotalCount: LikeComment::Tags::_hdlr_comment_total_count
